@@ -1,8 +1,9 @@
 # Exclude compiled files
 *.exe
 *.a
-Debug/*
-x64/*
+Debug/
+x64/
+cmake-build-debug/
 
 # Exclude Visual Studio project files
 *.vcxproj
