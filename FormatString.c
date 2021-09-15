@@ -130,14 +130,14 @@ double va_get_num(va_list args, int index, int num_of_non_floats, int num_of_flo
 
 	num_float_args is needed for linux compatibility
 */
-char* va_get_char(va_list args, int idx, int num_float_args) {
-    bool is_char = *(_VA_POINTER_AT_IDX_C(args, (idx - num_float_args)) + 1) == 0;
+char* va_get_char(va_list args, int index, int num_float_args) {
+    bool is_char = *(_VA_POINTER_AT_IDX_C(args, (index - num_float_args)) + 1) == 0;
 
-    int len = strlen(is_char ? _VA_POINTER_AT_IDX_C(args, idx - num_float_args) : _VA_POINTER_AT_IDX_S(args, idx - num_float_args));
+    int len = strlen(is_char ? _VA_POINTER_AT_IDX_C(args, index - num_float_args) : _VA_POINTER_AT_IDX_S(args, index - num_float_args));
     char* arg = calloc(len + 1, sizeof(char));
 
 
-    strcpy_s(arg, len+1, is_char ? _VA_POINTER_AT_IDX_C(args, idx - num_float_args) : _VA_POINTER_AT_IDX_S(args, idx - num_float_args));
+    strcpy_s(arg, len+1, is_char ? _VA_POINTER_AT_IDX_C(args, index - num_float_args) : _VA_POINTER_AT_IDX_S(args, index - num_float_args));
     return arg;
 }
 
