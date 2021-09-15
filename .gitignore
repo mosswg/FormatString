@@ -1,0 +1,10 @@
+# Exclude compiled files
+*.exe
+*.a
+Debug/*
+x64/*
+
+# Exclude Visual Studio project files
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
