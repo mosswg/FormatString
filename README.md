@@ -2,41 +2,57 @@
 
 A String Formater Written in C for fun. 
 
-<h2> Syntax </h2>
-There are 4 main functions in this project they are:
+## Vocabulary
+###General
+Floating/Floating Pointer Number: Any number with a decimal place. <br>
+Float: A variable which stores 4-byte floating numbers. <br>
+Int: A Variable which stores 4-byte whole numbers <br>
+Double: An 8-byte Float <br>
+Long: An 8-byte Int <br>
 
-<h3> vformats </h3>
-vformats is the main function. It is what actually dectects and replaces the variables in the Strings passed to it. <br>
-All other api functions simply wrap this one. <br>
-It's syntax is: <br>
 
+###Project
+Curly Set: A set of curly brackets that contains information about what should be replaced in the output string <br>
+Buffer: Where the output of the string formatter is placed. <br>
+Format: The string that specifies which arguments will be replaced in the string and where they should go. <br>
+
+
+
+## Syntax 
+
+### General
+Any regular character will be preserved in the format. Any curly set will be replaced with the argument specified. 
+Curly sets are used to specify the argument which replace the set. If two of the same
+argument identifiers are used in the same function call they will both be replaced by the same argument.
+e.g.
 ```
-void vformats(char** _BufferPtr, const char* _Format, va_list _Args) 
-
-_BufferPtr is a pointer to a char* of any size.
-_Format is the string that will be used as a the format.
-_Args is the arguments list that were passed by a wrapper function.
+This is the first argument {0} and this is the same {0}
+```
+Curly sets are sorted by minimum numbers so the lowest number will always be replaced by the first argument.
+This is also true of characters. e.g. 
+```
+In this string {55} is the first argument.
+```
+```
+In this string {55} is the second argument {1}.
 ```
 
- <br>
-<h3> formats </h3>
-formats is a wrapper function for vformats which takes variadic arguments instead of a va_list. <br>
+### Numbers
+Numbers are identified with number curly sets e.g. `{0}` could be the first argument. 
+Number formats are automatically detected but if they are wrong types can be explicitly
+defined with a `l` or `f` e.g. `{0f}` is a float or double and `{0l}` is an int or long. Type specifiers can 
+be placed anywhere in the curly set. Additionally, any floating number, either explicitly declared or not, 
+can be limited in length e.g. 
+```
+formats("This double is not limited {0}. This double is {0.2}", 1.234);
+```
+Will produce the output `This double is not limited 1.23400000. This double is 1.23`
 
-It's syntax is:
-```
-void formats(char** _Buffer, char* _Format, ...)
-_BufferPtr is a pointer to a char* of any size.
-_Format is the string that will be used as a the format.
-... is the variadic arguments that will be passed to vformats
-```
+### String and Characters
+Numbers are identified with number curly sets e.g. `{0}` could be the first argument.
 
-<h3> vfprint_f </h3>
-vfprint_f like the build in vfprintf function but using the vformats function to format the string.  <br>
+### Functions
+For Function Syntax See [Functions](https://github.com/mossx-dev/FormatString/wiki/Functions)
 
-It's syntax is:
-```
-void vfprint_f(FILE* _Stream, char* _Format, va_list args)
-_Stream is file that the output string will be placed into. (Typically stdout)
-_Format is the string that will be used as a the format.
-args is the variadic arguments that will be passed to vformats
-```
+
+

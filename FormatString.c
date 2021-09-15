@@ -1,8 +1,6 @@
 #include "FormatString.h"
 
 
-
-
 void array_max_pos(int* array, int len, int ignore, int* dest) {
     int max = 0;
     *dest = 0;
@@ -72,12 +70,12 @@ const char bottom_four_bits = 15;
 */
 
 /*
-	Gets the argument at index idx of args va_list then detects whether its a double or long (See method above).
+	Gets the argument at index index of args va_list then detects whether its a double or long (See method above).
 */
-double va_get_num(va_list args, int idx, int num_of_longs, int num_of_floats, bool detection, bool* is_floating)
+double va_get_num(va_list args, int index, int num_of_non_floats, int num_of_floats, bool detection, bool* is_floating)
 {
-    double double_arg = _VA_POINTER_AT_IDX_D(args, idx - num_of_longs);
-    long long_arg = _VA_POINTER_AT_IDX_L(args, idx - num_of_floats);
+    double double_arg = _VA_POINTER_AT_IDX_D(args, index - num_of_non_floats);
+    long long_arg = _VA_POINTER_AT_IDX_L(args, index - num_of_floats);
 
     if (detection) {
         *is_floating = true;
@@ -176,6 +174,8 @@ void vformats(char** _BufferPtr, const char* _Format, va_list _Args) {
 
     // Args
     char* _Buffer = *_BufferPtr;
+    free (_Buffer);
+    _Buffer = calloc(1, 1);
 
 
     // Counters
@@ -189,11 +189,11 @@ void vformats(char** _BufferPtr, const char* _Format, va_list _Args) {
 
 
     // Replacement Variables
-    int current_num_arg = 0;
-    int current_char_arg = 0;
+    int current_num_arg = 1;
+    int current_char_arg = 1;
     bool reading_double_length_restrictor = 0;
-    int* nums_by_appearance_in_format = calloc(current_num_arg, sizeof(int));
-    int* chars_by_appearance_in_format = calloc(current_char_arg, sizeof(int));
+    int* nums_by_appearance_in_format = malloc(current_num_arg * sizeof(int));
+    int* chars_by_appearance_in_format = malloc(current_char_arg * sizeof(int));
     bool* arg_is_num_arr = calloc(current_num_arg + current_char_arg, sizeof(bool));
     bool* arg_is_double = calloc(current_num_arg, sizeof(bool));
     bool* is_explicitly_declared = calloc(current_num_arg, sizeof(bool));
@@ -220,7 +220,7 @@ void vformats(char** _BufferPtr, const char* _Format, va_list _Args) {
                     nums_by_appearance_in_format[current_num_arg - 1] = atoi(number_str.string);
                     set_string(number_str, "");
                 }
-                else if (!is_num && !is_in_array(chars_by_appearance_in_format, current_char_arg, (int) replacement_char)) {
+                else if (!is_num && !is_in_array(chars_by_appearance_in_format, current_char_arg, (int) replacement_char) && !reading_double_length_restrictor) {
                     arg_is_num_arr = realloc(arg_is_num_arr, current_char_arg + current_num_arg + 1);
                     arg_is_num_arr[current_char_arg + current_num_arg] = is_num;
                     chars_by_appearance_in_format = realloc(chars_by_appearance_in_format, ++current_char_arg * sizeof(int));
@@ -450,7 +450,7 @@ void formats(char** _Buffer, char* _Format, ...) {
 	* Currently the only way to retain curley brackets is to pass them as a char or string
 */
 void vfprint_f(FILE* _Stream, char* _Format, va_list _Args) {
-    char* Buffer = malloc(0);
+    char* Buffer = malloc(1);
 
     vformats(&Buffer, _Format, _Args);
 

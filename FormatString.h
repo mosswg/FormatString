@@ -12,12 +12,11 @@
 #endif
 
 
-#if  (defined(WIN32) || defined(_WIN64))
+#if (defined(WIN32) || defined(_WIN64))
 	#define WIN
-	#define SIZE_OF_VA_ARG sizeof(__int64)
 #endif
 
-#ifndef _MSC_VER
+#ifndef WIN
 	#define strcat_s(a, b, c) strcat(a, c)
 	#define strcpy_s(a, b, c) strcpy(a, c)
 #endif
@@ -26,16 +25,16 @@
 #ifndef WIN
     #define IS_NOT_WINDOWS 1
     #define SIZE_OF_VA_ARG 8
-    #define _VA_POINTER_AT_IDX_L(args, idx) *(long*)(args->reg_save_area + (((idx) + 1) * args->gp_offset))
-    #define _VA_POINTER_AT_IDX_C(args, idx) (char*)(args->reg_save_area + (((idx) + 1) * args->gp_offset))
-    #define _VA_POINTER_AT_IDX_S(args, idx) *(char**)(args->reg_save_area + (((idx) + 1) * args->gp_offset))
-    #define _VA_POINTER_AT_IDX_D(args, idx) *(double*)(args->reg_save_area + (args->fp_offset + (2 * (idx) * args->gp_offset)))
+    #define _VA_POINTER_AT_IDX_L(args, index) *(long*)(((((index < ((((unsigned long)args->gp_offset) - ((unsigned long)args->fp_offset))/((unsigned long)args->gp_offset))) * ((unsigned long)args->reg_save_area)) + (!((index < ((((unsigned long)args->gp_offset) - ((unsigned long)args->fp_offset))/((unsigned long)args->gp_offset)))) * ((unsigned long)args->overflow_arg_area))) + (((index) + 1) * args->gp_offset)))
+    #define _VA_POINTER_AT_IDX_C(args, index) (char*)(((((index < ((((unsigned long)args->gp_offset) - ((unsigned long)args->fp_offset))/((unsigned long)args->gp_offset))) * ((unsigned long)args->reg_save_area)) + (!((index < ((((unsigned long)args->gp_offset) - ((unsigned long)args->fp_offset))/((unsigned long)args->gp_offset)))) * ((unsigned long)args->overflow_arg_area))) + (((index) + 1) * args->gp_offset)))
+    #define _VA_POINTER_AT_IDX_S(args, index) *(char**)(((((index < ((((unsigned long)args->gp_offset) - ((unsigned long)args->fp_offset))/((unsigned long)args->gp_offset))) * ((unsigned long)args->reg_save_area)) + (!((index < ((((unsigned long)args->gp_offset) - ((unsigned long)args->fp_offset))/((unsigned long)args->gp_offset)))) * ((unsigned long)args->overflow_arg_area))) + (((index) + 1) * args->gp_offset)))
+    #define _VA_POINTER_AT_IDX_D(args, index) *(double*)(args->reg_save_area + (args->fp_offset + (2 * (index) * args->gp_offset)))
 #else
     #define IS_NOT_WINDOWS 0
-	#define _VA_POINTER_AT_IDX_L(args, idx) *(long*)(args + ((idx) * SIZE_OF_VA_ARG))
-	#define _VA_POINTER_AT_IDX_C(args, idx) (char*)(args + ((idx) * SIZE_OF_VA_ARG))
-	#define _VA_POINTER_AT_IDX_S(args, idx) *(char**)(args + ((idx) * SIZE_OF_VA_ARG))
-	#define _VA_POINTER_AT_IDX_D(args, idx) *(double*)(args + ((idx) * SIZE_OF_VA_ARG))
+	#define _VA_POINTER_AT_IDX_L(args, index) *(long*)(args + ((index) * sizeof(__int64)))
+	#define _VA_POINTER_AT_IDX_C(args, index) (char*)(args + ((index) * sizeof(__int64)))
+	#define _VA_POINTER_AT_IDX_S(args, index) *(char**)(args + ((index) * sizeof(__int64)))
+	#define _VA_POINTER_AT_IDX_D(args, index) *(double*)(args + ((index) * sizeof(__int64)))
 #endif
 
 #ifndef _FLOATING_POINT_MAX_ZERO_BYTES_
@@ -64,10 +63,11 @@ static inline void set_string(string dest, const char* value) {
 static inline void set_empty_string(string dest) {
     free(dest.string);
     dest.length = 1;
-    dest.string = calloc(1, 1);
+    dest.string = calloc(1, sizeof(char));
 }
 static inline void append_char(string dest, char c) {
-    dest.string = realloc(dest.string, ++dest.length+1);
+    dest.length += 2;
+    dest.string = realloc(dest.string, dest.length);
     dest.string[dest.length-2] = c;
     dest.string[dest.length-1] = '\0';
 }
