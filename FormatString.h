@@ -156,8 +156,8 @@ static inline bool isCharOrInt(int x) {
 	return (x > 255) /* value is greater than max char value */ || (*((char*)&x + 1) == 0); /* if an int is less than 255 then the 2nd byte of the int must be 0. Using this we can reference x then cast it to a char ptr and increment it by one and then dereference it. If the value is not zero then x must be a character */
 }
 
-const char topFourBits = (char)240;
-const char bottomFourBits = (char)15;
+const char topFourBits = 240;
+const char bottomFourBits = 15;
 
 
 /*
@@ -193,8 +193,8 @@ double va_get_num(va_list args, int idx, int numOfLongs, int numOfFloats, bool d
 		int zeroBytes = _FLOATING_POINT_MAX_ZERO_BYTES_;
 		bool Exponent = false;
 		bool Mantissa = false;
-		if (((floor(dArg) != dArg) && (ceil(dArg)) != dArg) && !((dArg == 0 && (dArg) == 0.0f))) {
-			if (!(floor(dArg) == 0 && dArg < 0.0000001)) {
+		if (((((int)dArg) != dArg)) && (dArg != 0)) {
+			if (!(((int)dArg == 0) && dArg < 0.0000001)) {
 				for (int i = SIZE_OF_VA_ARG - 1; i >= 0; i--) {
 					if (*(((char*)&lArg) + i) != '\0') {
 						{
@@ -570,10 +570,10 @@ void formats(char** _Buffer, char* _Format, ...) {
 
 	* Currently the only way to retain curley brackets is to pass them as a char or string
 */
-void vfprint_f(FILE* _Stream, char* _Format, va_list args) {
+void vfprint_f(FILE* _Stream, char* _Format, va_list _Args) {
 	char* Buffer = malloc(0);
 
-	vformats(&Buffer, _Format, args);
+	vformats(&Buffer, _Format, _Args);
 
 	fputs(Buffer, _Stream);
 
