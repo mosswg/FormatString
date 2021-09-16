@@ -138,10 +138,10 @@ static inline bool is_char_or_int(int x) {
 }
 
 
-double va_get_num(va_list, int, int, int, bool, bool*);
+void va_get_num(va_list, int, int, int, bool, bool*, double*);
 
 
-char* va_get_char(va_list, int, int);
+void va_get_char(va_list, int, int, char**);
 
 
 
