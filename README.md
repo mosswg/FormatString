@@ -1,20 +1,9 @@
 # FormatString
 
-A String Formater Written in C for fun. 
+A String Formater in C.
 
 ## Vocabulary
-### General
-Floating/Floating Pointer Number: Any number with a decimal place. <br>
-Float: A variable which stores 4-byte floating numbers. <br>
-Int: A Variable which stores 4-byte whole numbers <br>
-Double: An 8-byte Float <br>
-Long: An 8-byte Int <br>
-
-
-### Project
-Curly Set: A set of curly brackets that contains information about what should be replaced in the output string <br>
-Buffer: Where the output of the string formatter is placed. <br>
-Format: The string that specifies which arguments will be replaced in the string and where they should go. <br>
+Vocabulary has been moved to the wiki.
 
 
 
