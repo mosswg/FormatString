@@ -38,7 +38,7 @@ void array_min_pos(int* array, int len, int ignore, int* dest) {
         }
     }
     else {
-        int* ignore_index = calloc(ignore + 1, sizeof(int));
+        int* ignore_index = calloc(ignore, sizeof(int));
         for (int i = 0; i < ignore; i++) {
             array_min_pos(array, len, ignore - (i + 1), ignore_index + i);
         }
@@ -51,8 +51,8 @@ void array_min_pos(int* array, int len, int ignore, int* dest) {
     }
 }
 
-const char top_four_bits = 240;
-const char bottom_four_bits = 15;
+const unsigned char top_four_bits = 240;
+const unsigned char bottom_four_bits = 15;
 
 
 /*
@@ -218,14 +218,14 @@ void vformats(char** _BufferPtr, const char* _Format, va_list _Args) {
                     if (replacement_char != '\0') {
                         arg_is_double[current_num_arg-1] = (replacement_char == 'f');
                     }
-                    nums_by_appearance_in_format[current_num_arg-1] = atoi(number_str.string);
+                    nums_by_appearance_in_format[current_num_arg - 1] = atoi(number_str.string);
                     set_string(&number_str, "");
                 }
                 else if (!is_num && !is_in_array(chars_by_appearance_in_format, current_char_arg, (int) replacement_char) && !reading_double_length_restrictor) {
                     arg_is_num_arr = realloc(arg_is_num_arr, current_char_arg + current_num_arg + 1);
                     arg_is_num_arr[current_char_arg + current_num_arg] = is_num;
                     chars_by_appearance_in_format = realloc(chars_by_appearance_in_format, (++current_char_arg+1) * sizeof(int));
-                    chars_by_appearance_in_format[current_char_arg-1] = replacement_char;
+                    chars_by_appearance_in_format[current_char_arg - 1] = replacement_char;
                 }
                 replacement_char = '\0';
                 is_num = false;
@@ -393,7 +393,7 @@ void vformats(char** _BufferPtr, const char* _Format, va_list _Args) {
     *_BufferPtr = _Buffer;
 
 
-    for (int i = 0; i < number_of_char_args+1; i++) {
+    for (int i = 0; i < number_of_char_args; i++) {
         free(replacement_chars[i]);
     }
     free(replacement_chars);
