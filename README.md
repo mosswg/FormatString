@@ -29,9 +29,9 @@ Numbers are identified with number curly sets e.g. `{0}` could be the first argu
 Number formats are automatically detected but if they are wrong types can be explicitly
 defined with a `l` or `f` e.g. `{0f}` is a float or double and `{0l}` is an int or long. Type specifiers can 
 be placed anywhere in the curly set. Additionally, any floating number, either explicitly declared or not, 
-can be limited in length e.g. 
+can be limited in length e.g. A call to formats with the arguments:
 ```
-formats("This double is not limited {0}. This double is {0.2}", 1.234);
+"This double is not limited {0}. This double is {0.2}" and 1.234
 ```
 Will produce the output `This double is not limited 1.23400000. This double is 1.23`
 
