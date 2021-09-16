@@ -18,7 +18,7 @@
 #else
     #if defined(__clang__)
         #define __COMPILER_STR__ "clang"
-        #define __COMPILER_VERSION__ __GNUC__
+        #define __COMPILER_VERSION__ __clang_major__
     #elif defined(__GNUC__)
         #define __COMPILER_STR__ "gcc"
         #define __COMPILER_VERSION__ __GNUC__
