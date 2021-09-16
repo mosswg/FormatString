@@ -29,11 +29,12 @@ Numbers are identified with number curly sets e.g. `{0}` could be the first argu
 Number formats are automatically detected but if they are wrong types can be explicitly
 defined with a `l` or `f` e.g. `{0f}` is a float or double and `{0l}` is an int or long. Type specifiers can 
 be placed anywhere in the curly set. Additionally, any floating number, either explicitly declared or not, 
-can be limited in length e.g. A call to formats with the arguments:
+can be limited in length <br>
+e.g. A call to formats with the arguments:
 ```
 "This double is not limited {0}. This double is {0.2}" and 1.234
 ```
-Will produce the output `This double is not limited 1.23400000. This double is 1.23`
+Will produce the output `This double is not limited 1.234000. This double is 1.23`
 
 ### String and Characters
 Numbers are identified with number curly sets e.g. `{0}` could be the first argument.
