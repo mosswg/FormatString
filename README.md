@@ -2,7 +2,7 @@
 
 A String Formater in C.
 
-## Vocabulary
+## Project Vocabulary
 Vocabulary has been moved to the [Wiki](https://github.com/mossx-dev/FormatString/wiki).
 
 
