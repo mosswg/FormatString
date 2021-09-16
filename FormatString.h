@@ -44,7 +44,7 @@
 
 // STRING
 typedef struct string { char* string; int length; void (*append)(struct string*, char*); } string;
-static inline void append_string(string* dest, char* str) { int len = strlen(dest->string) + strlen(str); dest->string = realloc(dest->string, len);	strcat_s(dest->string, len, str); }
+static inline void append_string(string* dest, char* str) { int len = strlen(dest->string) + strlen(str); dest->string = realloc(dest->string, len); strcat_s(dest->string, len, str); }
 static inline char* create_string(const char* str) { if (str[0] == '\0') { return calloc(1, 1); } size_t len = strlen(str);	char* out = malloc(len + 1);	strcpy_s(out, len, str);	return out; }
 static inline string new_string(const char* value) {
     string out = {.string = create_string(value),.length = strlen(value) + 1,.append = append_string};
@@ -54,37 +54,45 @@ static inline string empty_string() {
     string out = {.string = calloc(1,1), .length = 1, .append = append_string};
     return out;
 }
-static inline void set_string(string dest, const char* value) {
-    free(dest.string);
-    dest.length = strlen(value) + 1;
-    dest.string = calloc(dest.length, sizeof(char));
-    if (dest.length != 0) strcpy_s(dest.string, dest.length, value);
+static inline void set_string(string *dest, const char* value) {
+    free(dest->string);
+    dest->length = strlen(value) + 1;
+    dest->string = malloc(dest->length * sizeof(char));
+    if ((dest->length-1) != 0)
+        strcpy_s(dest->string, dest.length, value);
 }
-static inline void set_empty_string(string dest) {
-    free(dest.string);
-    dest.length = 1;
-    dest.string = calloc(1, sizeof(char));
+static inline void set_empty_string(string* dest) {
+    free(dest->string);
+    dest->length = 1;
+    dest->string = calloc(1, sizeof(char));
 }
-static inline void append_char(string dest, char c) {
-    dest.length += 2;
-    dest.string = realloc(dest.string, dest.length);
-    dest.string[dest.length-2] = c;
-    dest.string[dest.length-1] = '\0';
+static inline void append_char(string* dest, char c) {
+    dest->length += 1;
+    dest->string = realloc(dest->string, dest->length+1);
+    dest->string[dest->length-2] = c;
+    dest->string[dest->length-1] = '\0';
 }
 #define is_empty_string(str) str.string[0] == '\0'
 static inline void copy_string(string str, char* dest) {
     dest = dest ? realloc(dest, str.length) : calloc(str.length, 1);
     strcpy_s(dest, str.length, str.string);
 }
-static inline void before_index(string str, int index, char* out) {
-    out = out ? realloc(out, str.length) : calloc(str.length, 1);
-    strcpy_s(out, str.length, str.string);
-    out[index] = '\0';
+static inline void before_index(string str, int index, char** out) {
+    if (*out) {
+        free(*out);
+    }
+
+    *out = calloc(str.length, 1);
+    strcpy_s(*out, str.length, str.string);
+    (*out)[index] = '\0';
 }
-static inline void after_index(string str, int index, char* out) {
-    out = out ? realloc(out, str.length) : calloc(str.length, 1);
-    strcpy_s(out, str.length, str.string);
-    out += (index + 1);
+static inline void after_index(string str, int index, char** out) {
+    if (*out) {
+        free(*out);
+    }
+    (*out) = calloc(str.length, 1);
+    strcpy_s((*out), str.length, str.string);
+    (*out) += (index + 1);
 }
 static inline bool contains_char(string str, char character) { for (int i = 0; i < str.length; i++) { if (str.string[i] == character) { return true; } } return false; }
 static inline int char_position(string str, char character) { for (int i = 0; i < str.length; i++) { if (str.string[i] == character) { return i; } } return -1; }

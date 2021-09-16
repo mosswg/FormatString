@@ -171,15 +171,17 @@ void vformats(char** _BufferPtr, const char* _Format, va_list _Args) {
         return;
     }
 
+    // Counters
+    int new_string_pos = 0;
+    int new_string_len = 100;
 
     // Args
     char* _Buffer = *_BufferPtr;
     free (_Buffer);
-    _Buffer = calloc(1, 1);
+    _Buffer = calloc(new_string_len, sizeof(char));
 
 
-    // Counters
-    int new_string_pos = 0;
+
 
 
     // State identifiers
@@ -193,7 +195,9 @@ void vformats(char** _BufferPtr, const char* _Format, va_list _Args) {
     int current_char_arg = 1;
     bool reading_double_length_restrictor = 0;
     int* nums_by_appearance_in_format = malloc(current_num_arg * sizeof(int));
+    nums_by_appearance_in_format[0] = INT_MAX;
     int* chars_by_appearance_in_format = malloc(current_char_arg * sizeof(int));
+    chars_by_appearance_in_format[0] = INT_MAX;
     bool* arg_is_num_arr = calloc(current_num_arg + current_char_arg, sizeof(bool));
     bool* arg_is_double = calloc(current_num_arg, sizeof(bool));
     bool* is_explicitly_declared = calloc(current_num_arg, sizeof(bool));
@@ -218,7 +222,7 @@ void vformats(char** _BufferPtr, const char* _Format, va_list _Args) {
                         arg_is_double[current_num_arg-1] = (replacement_char == 'f');
                     }
                     nums_by_appearance_in_format[current_num_arg - 1] = atoi(number_str.string);
-                    set_string(number_str, "");
+                    set_string(&number_str, "");
                 }
                 else if (!is_num && !is_in_array(chars_by_appearance_in_format, current_char_arg, (int) replacement_char) && !reading_double_length_restrictor) {
                     arg_is_num_arr = realloc(arg_is_num_arr, current_char_arg + current_num_arg + 1);
@@ -234,7 +238,7 @@ void vformats(char** _BufferPtr, const char* _Format, va_list _Args) {
                 reading_double_length_restrictor = true;
             }
             else if (current_char >= '0' && current_char <= '9' && !reading_double_length_restrictor) {
-                append_char(number_str, current_char);
+                append_char(&number_str, current_char);
                 is_num = true;
             }
             else if ((current_char >= 'A' && current_char <= 'Z') || (current_char >= 'a' && current_char <= 'z')) {
@@ -282,13 +286,16 @@ void vformats(char** _BufferPtr, const char* _Format, va_list _Args) {
     int replacement_len = 0;
 
     is_num = false;
-    set_empty_string(number_str);
+    set_empty_string(&number_str);
     int argument_index = 0;
     char* temp = calloc(100, sizeof(char));
     while (_Format[string_pos] != '\0') {
         current_char = _Format[string_pos];
-        if (!reading_format_specifier && current_char != '{') { // Pass values
-            _Buffer = realloc(_Buffer, new_string_pos + 1);
+        if (!reading_format_specifier && current_char != '{') {// Pass values
+            if (new_string_len < new_string_pos) {
+                _Buffer = realloc(_Buffer, new_string_pos + 1);
+                new_string_len++;
+            }
             _Buffer[new_string_pos++] = _Format[string_pos];
             _Buffer[new_string_pos] = '\0';
         }
@@ -303,10 +310,10 @@ void vformats(char** _BufferPtr, const char* _Format, va_list _Args) {
                         int periodIdx = char_position(number_str, '.');
                         char* temp_str = NULL;
 
-                        before_index(number_str, periodIdx, temp_str);
+                        before_index(number_str, periodIdx, &temp_str);
                         current_number = atoi(temp_str);
 
-                        after_index(number_str, periodIdx, temp_str);
+                        after_index(number_str, periodIdx, &temp_str);
                         double_restriction_length = atoi(temp_str);
 
                         free(temp_str - (periodIdx + 1));
@@ -331,14 +338,14 @@ void vformats(char** _BufferPtr, const char* _Format, va_list _Args) {
                     replacement_len = strlen(temp);
 
                     new_string_pos += replacement_len;
-                    _Buffer = realloc(_Buffer, new_string_pos + 2);
+                    if (new_string_len < new_string_pos) {
+                        _Buffer = realloc(_Buffer, new_string_pos + 2);
+                        new_string_len = new_string_pos;
+                    }
                     _Buffer[new_string_pos - replacement_len] = '\0';
 
-
                     strcat(_Buffer, temp);
-
-                    set_empty_string(number_str);
-
+                    set_empty_string(&number_str);
                     is_num = false;
                 }
                 else {
@@ -351,7 +358,10 @@ void vformats(char** _BufferPtr, const char* _Format, va_list _Args) {
                     replacement_len = strlen(replacement_chars[argument_index]);
 
                     new_string_pos += replacement_len;
-                    _Buffer = realloc(_Buffer, new_string_pos + 2);
+                    if (new_string_len < new_string_pos) {
+                        _Buffer = realloc(_Buffer, new_string_pos + 2);
+                        new_string_len = new_string_pos;
+                    }
                     _Buffer[new_string_pos - replacement_len] = '\0';
 
                     strcat(_Buffer, (replacement_chars[argument_index]));
@@ -365,7 +375,7 @@ void vformats(char** _BufferPtr, const char* _Format, va_list _Args) {
 
 
                 if ((current_char >= '0' && current_char <= '9') || current_char == '.') {
-                    append_char(number_str, current_char);
+                    append_char(&number_str, current_char);
                     is_num = true;
                 }
                 else if ((current_char >= 'A' && current_char <= 'Z') || (current_char >= 'a' && current_char <= 'z')) {

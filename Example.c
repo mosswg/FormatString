@@ -32,7 +32,7 @@ int main() {
     srand(time(0));
 
     #ifdef __EXPLICT_FLOATS__
-        print_f("Hello {a}: {b} Version {0}\nFloat restricted length: {1.1f}\nFloat unrestricted length: {1f}", "Linux", __COMPILER_STR__, __COMPILER_VERSION__, ((float)rand()/(float)(RAND_MAX)) * 100);
+        print_f("Hello {a}: {b} Version {0}\nFloat restricted length: {1.4f}\nFloat unrestricted length: {1f}", "Linux", __COMPILER_STR__, __COMPILER_VERSION__, ((float)rand()/(float)(RAND_MAX)) * 100);
     #else
         print_f("Hello {a}: {b} Version {0}\nFloat restricted length: {1.1}\nFloat unrestricted length: {1}", "Linux", __COMPILER_STR__, __COMPILER_VERSION__, ((float)rand()/(float)(RAND_MAX)) * 100);
     #endif
