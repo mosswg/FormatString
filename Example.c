@@ -9,8 +9,10 @@
         #define __COMPILER_VERSION__ _MSC_VER
     #elif defined(__MINGW64__)
         #define __COMPILER_STR__ "MinGW 64-bit"
+        #define __COMPILER_VERSION__ __MINGW64_VERSION_MAJOR
     #elif defined(__MINGW32__)
         #define __COMPILER_STR__ "MinGW 32-bit"
+        #define __COMPILER_VERSION__ __MINGW32_MAJOR_VERSION
     #else
         #define __COMPILER_STR__ "Unknown"
     #endif
