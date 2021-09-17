@@ -5,6 +5,7 @@ Debug/
 x64/
 cmake-build-debug/
 .idea
+build
 
 # Exclude Visual Studio project files
 *.vcxproj
