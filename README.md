@@ -3,6 +3,13 @@
 ## Project Vocabulary
 Vocabulary has been moved to the [Wiki](https://github.com/mossx-dev/FormatString/wiki).
 
+## Building
+This project uses CMake.
+<br>
+The option `BUILD_EXAMPLE_CODE` will build and executable with Example.c. If no option is specified CMake will build the project as a library.
+<br>
+For anyone who doesn't know how to use cmake build instructions are on the [wiki](../../wiki/Building).
+<br>
 
 
 ## Syntax 
