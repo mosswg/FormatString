@@ -1,13 +1,12 @@
 # FormatString
 
 ## Building
-This project uses CMake.
+This project uses CMake.<br>
 <br>
-The option `BUILD_EXAMPLE_CODE` will build and executable with Example.c. If no option is specified CMake will build the project as a library.
+The option `BUILD_EXAMPLE_CODE` will build and executable with Example.c. If no option is specified CMake will build the project as a library.<br>
 <br>
-For anyone who doesn't know how to use cmake build instructions are on the [wiki](../../wiki/Building).
+For anyone who doesn't know how to use cmake build instructions are on the [wiki](../../wiki/Building).<br>
 <br>
-
 
 ## Syntax 
 
