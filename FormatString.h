@@ -97,16 +97,6 @@ static inline void after_index(string str, int index, char** out) {
 static inline bool contains_char(string str, char character) { for (int i = 0; i < str.length; i++) { if (str.string[i] == character) { return true; } } return false; }
 static inline int char_position(string str, char character) { for (int i = 0; i < str.length; i++) { if (str.string[i] == character) { return i; } } return -1; }
 
-static inline char* char_array_after_char(char* array, char afterChar) {
-	int charIdx = -1;
-	for (int i = 0; i < strlen(array); i++) {
-		if (array[i] == afterChar) { 
-			charIdx = i;
-			break;
-		} 
-	}
-	return (charIdx + 1) ? array + charIdx : "";
-}
 static inline int char_array_length_before_char(char* array, char afterChar) {
 	for (int i = 0; i < strlen(array); i++) {
 		if (array[i] == afterChar) {
