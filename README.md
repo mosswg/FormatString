@@ -1,8 +1,5 @@
 # FormatString
 
-## Project Vocabulary
-Vocabulary has been moved to the [Wiki](https://github.com/mossx-dev/FormatString/wiki).
-
 ## Building
 This project uses CMake.
 <br>
