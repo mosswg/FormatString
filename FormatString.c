@@ -59,18 +59,18 @@ const unsigned char bottom_four_bits = 15;
 									Double or Long Detection
 	------------------------------------------------------------------------------------------
 
-										Fundamenals
+										Fundamentals
 	va_lists are char arrays with size 8 that store either the data or a pointer to an array or struct.
 	64-bit Doubles are stored with 1 bit for sign and 10 bits for an exponent. The rest of the bits 53 bits are Mantissa.
 
 										  Method
 	Nearly all doubles contain at least one exponent bit thus if we can detect the first 1 and a half bytes (12 bits) and any
 	of them are set then we can assume it is a double. This falls apart with very high longs but in my tests it is 100% accurate up to at least 10,000,000 for longs
-	and 10,000 for doubles (incremeted by 0.0001)
+	and 10,000 for doubles (incremented by 0.0001)
 */
 
 /*
-	Gets the argument at index index of args va_list then detects whether its a double or long (See method above).
+	Gets the argument at the given index of args va_list then detects whether it's a double or long (See method above).
 */
 void va_get_num(va_list args, int index, int num_of_non_floats, int num_of_floats, bool detection, bool* is_floating, double* buffer)
 {
@@ -124,7 +124,7 @@ void va_get_num(va_list args, int index, int num_of_non_floats, int num_of_float
 */
 
 /*
-	Gets the argument at index idx of args va_list then detects whether it's a char or string (See method above).
+	Gets the argument at the given index of args va_list then detects whether it's a char or string (See method above).
 
 	num_float_args is needed for linux compatibility
 */
@@ -424,7 +424,7 @@ void vformats(char** _BufferPtr, const char* _Format, va_list _Args) {
 	Chars: The syntax for numbers is {*} where * is a letter pertaining to the desired argument.
 
 
-	* Currently the only way to retain curley brackets is to pass them as a char or char*
+	* Currently, the only way to retain curley brackets is to pass them as a char or char*
 
 */
 void formats(char** _Buffer, char* _Format, ...) {
@@ -439,14 +439,14 @@ void formats(char** _Buffer, char* _Format, ...) {
 
 
 /*
-	Prints a formated string using vformats
+	Prints a formatted string using vformats
 
 	_Format: The format that will be printed after replacement
 
 	Syntax: Curley Brackets will be completely removed* and replaced by the argument matching their number or letter in
 	the _Format string.
 
-	Arguments will be read by lowest value first. e.g. if 55 is the lowest number in curley brackets it will be interperated as the first number passed
+	Arguments will be read by lowest value first. e.g. if 55 is the lowest number in curley brackets it will be interpreted as the first number passed
 
 	Numbers: The syntax for numbers is {n} where n a number pertaining to the desired argument.
 	Numbers will be automatically detected as either long format or IEEE-754 (double) format.
@@ -455,7 +455,7 @@ void formats(char** _Buffer, char* _Format, ...) {
 	Chars: The syntax for numbers is {*} where * is a letter pertaining to the desired argument.
 
 
-	* Currently the only way to retain curley brackets is to pass them as a char or string
+	* Currently, the only way to retain curley brackets is to pass them as a char or string
 */
 void vfprint_f(FILE* _Stream, char* _Format, va_list _Args) {
     char* Buffer = malloc(1);
@@ -469,7 +469,7 @@ void vfprint_f(FILE* _Stream, char* _Format, va_list _Args) {
 
 
 /*
-	Prints a formated string using vfprint_f
+	Prints a formatted string using vfprint_f
 
 	_Format: The format that will be printed after replacement
 
@@ -485,7 +485,7 @@ void vfprint_f(FILE* _Stream, char* _Format, va_list _Args) {
 	Chars: The syntax for numbers is {*} where * is a letter pertaining to the desired argument.
 
 
-	* Currently the only way to retain curley brackets is to pass them as a char or char*
+	* Currently, the only way to retain curley brackets is to pass them as a char or char*
 
 */
 void print_f(char* _Format, ...) {
@@ -499,7 +499,16 @@ void print_f(char* _Format, ...) {
 }
 
 
-__attribute__((unused)) bool _TestFormatString(int iterations, double doubleInc) {
+/*
+ * ONLY WORKS ON WINDOWS!!
+ *
+ * Runs formats for every whole number from 0 to iterations and every double from 0 to iterations * double_increment
+ * e.g. if given iterations as 10000 and double_increment as 0.1 it will get 0.1 0.2 0.3 ... 1000.0
+ *
+ * While running the loops it checks the value against the build in format function sprintf if the values are unequal it returns false. If all test pass it returns true.
+ * 
+ */
+bool _TestFormatString(int iterations, double double_increment) {
     char* buffer1 = calloc(16, 1);
     char* buffer2 = malloc(0);
 
@@ -517,7 +526,7 @@ __attribute__((unused)) bool _TestFormatString(int iterations, double doubleInc)
 
 
     // Exits if i is zero because formatString interperates 0 as long
-    for (double i = doubleInc; i < iterations * doubleInc; i += doubleInc) {
+    for (double i = double_increment; i < iterations * double_increment; i += double_increment) {
         printf("\b\b\b\b\b\b\b\b\b\b\b\b\bi: %lf", i);
         sprintf(buffer1, "%lf", i);
         formats(&buffer2, "{0f}", i);
@@ -527,7 +536,7 @@ __attribute__((unused)) bool _TestFormatString(int iterations, double doubleInc)
         }
     }
 
-    print_f("\nAll Tests Passed For {0} Iterations With a Double Increment Of {1}", iterations, doubleInc);
+    print_f("\nAll Tests Passed For {0} Iterations With a Double Increment Of {1}", iterations, double_increment);
 
     free(buffer1);
     free(buffer2);
